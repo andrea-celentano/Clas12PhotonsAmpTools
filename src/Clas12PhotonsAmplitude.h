@@ -67,7 +67,7 @@ private:
 
 protected:
 	//it's important that they're protected, NOT private.
-	int m_helicity_beam; //beam helicity
+	int m_helicity_beam;     //beam helicity
 	int m_helicity_electron; //scattered electron helicity
 
 };
