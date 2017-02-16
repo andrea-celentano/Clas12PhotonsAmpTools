@@ -7,9 +7,9 @@
 
 template<class T> Clas12PhotonsAmplitude<T>::Clas12PhotonsAmplitude(const vector<string>& args) :
 		UserAmplitude<T>(args) {
-	assert(args.size() >= 2); //helicity beam, helicity electron, helicity target, helicity recoil - then others.
+	assert(args.size() >= 3); //helicity beam, helicity target, helicity scattered electron - then others.
 	m_helicity_beam = atoi(args[0].c_str());
-	m_helicity_electron = atoi(args[1].c_str());
+	m_helicity_electron = atoi(args[2].c_str());
 }
 
 //the order of the particles is supposed to be:
