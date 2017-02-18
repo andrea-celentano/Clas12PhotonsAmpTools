@@ -7,16 +7,18 @@
 
 template<class T> Clas12PhotonsAmplitude<T>::Clas12PhotonsAmplitude(const vector<string>& args) :
 		UserAmplitude<T>(args) {
-	assert(args.size() >= 3); //helicity beam, helicity target, helicity scattered electron - then others.
+	assert(args.size() >= 2); //helicity beam, helicity scattered electron,- -- then others.
 	m_helicity_beam = atoi(args[0].c_str());
-	m_helicity_electron = atoi(args[2].c_str());
+	m_helicity_electron = atoi(args[1].c_str());
 }
 
 //the order of the particles is supposed to be:
 //0: beam  
-//1: target
-//2: scattered e-
+//1: scattered e-
+//2: target
 //3..n-2: all the other particles
+
+//This ordering is convenient for the helicity!!
 
 /*This calculates the electron-scattering in the GJ framework!
  */
@@ -24,7 +26,7 @@ template<class T> Clas12PhotonsAmplitude<T>::Clas12PhotonsAmplitude(const vector
 template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble** pKin, ElectronScatteringTerm &ElectronScattering) const {
 
 	const int Ibeam = 0;
-	const int Iscattered = 2;
+	const int Iscattered = 1;
 
 	TLorentzVector beam;
 	TLorentzVector electron;
@@ -50,11 +52,12 @@ template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble*
 	Pzg = pKin[Ibeam][3] - pKin[Iscattered][3]; //quasi real photon momentum (GJ:Purely along z)
 	Mg = sqrt(Pzg * Pzg - Eg * Eg);
 
-	if ((m_helicity_beam == 1) && (m_helicity_electron == 1)) {
-
+	if ((m_helicity_beam == 1) && (m_helicity_electron == 1)) {		
+		
 		ElectronScattering.JP = complex < GDouble > (cos(phi2), -sin(phi2));
 		ElectronScattering.JP *= 2 * sqrt(2 * E1 * E2) * cos(theta1 / 2) * sin(theta2 / 2);
 
+		
 		ElectronScattering.JM = complex < GDouble > (cos(phi1), sin(phi1));
 		ElectronScattering.JM *= -2 * sqrt(2 * E1 * E2) * cos(theta2 / 2) * sin(theta1 / 2);
 
@@ -108,7 +111,8 @@ template<class T> complex<GDouble> Clas12PhotonsAmplitude<T>::calcAmplitude(GDou
 	//Note that the 1/Q2 factor is already included in JP,J0,JM
 	amp = helP * ElectronScattering.JP + hel0 * ElectronScattering.J0 + helM * ElectronScattering.JM;
 
-	// cout<<"HEL:: "<<amp<<" "<< m_helicity_beam<<" "<< m_helicity_electron<<" "<<m_electron_idx<<endl;
+	//cout<<"HEL:: "<<helP<<" "<< ElectronScattering.JP <<" "<<hel0<<" "<< ElectronScattering.J0 << " "<<helM <<" "<<ElectronScattering.JM<<endl;
+	//cout<<"HEL:: "<<amp<<" "<< m_helicity_beam<<" "<< m_helicity_electron<<" "<<endl;
 	return amp;
 
 }

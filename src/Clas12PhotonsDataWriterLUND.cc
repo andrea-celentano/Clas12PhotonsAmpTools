@@ -122,7 +122,7 @@ void Clas12PhotonsDataWriterLUND::particle_line(int np){
   //mass
   stream<<m_PDGparticle->Mass()<<" ";
   //vertex
-  stream<<m_vertex[np].X()<<" "<<m_vertex[np].Y()<<" "<<m_vertex[np].Z()<<endl;
+  stream<<m_vertex[np].X()<<" "<<m_vertex[np].Y()<<" "<<m_vertex[np].Z();
 
   
   m_particle=stream.str();
