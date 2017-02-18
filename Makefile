@@ -1,5 +1,5 @@
 
-INC_DIR :=  -I.. -I$(AMPTOOLS)
+INC_DIR :=  -I. -I$(AMPTOOLS) -I../include
 
 CXX := gcc
 CXX_FLAGS := $(shell root-config --cflags)
