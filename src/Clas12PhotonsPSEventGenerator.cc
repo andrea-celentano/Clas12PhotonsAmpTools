@@ -43,7 +43,7 @@ void Clas12PhotonsPSEventGenerator::setReaction(ReactionInfo *reaction) {
 
 	m_reaction = reaction;
 
-	m_Np = m_pname.size() + 1;
+	m_Np = m_reaction->particleList().size() - 2 ; //first two entries are beam and target
 	m_Wmin = 0;
 	//add the final state e'
 	m_pname.push_back("e-");
@@ -54,12 +54,12 @@ void Clas12PhotonsPSEventGenerator::setReaction(ReactionInfo *reaction) {
 	//use the TDatabasePDG to search for these particles and assign masses - pids
 	//also do a consistency check for charges
 
-	for (int ip = 0; ip < m_Np; ip++) {
+	for (int ip = 3; ip < m_reaction->particleList().size(); ip++) { //starting from the fourth entry, the first 3 are beam, target, recoil
 		particle = 0;
-		particle = m_dbPDG->GetParticle(m_pname[ip].c_str());
+		particle = m_dbPDG->GetParticle(m_reaction->particleList()[ip].c_str());
 		if (!particle) {
-			cerr << "Can't find particle: " << m_pname[ip] << endl;
-			cerr << "Exit " << endl;
+			cout << "Can't find particle: " << m_pname[ip] << endl;
+			cout << "Exit " << endl;
 			exit(1);
 		} else {
 			m_pname.push_back(m_reaction->particleList()[ip]);
@@ -67,6 +67,8 @@ void Clas12PhotonsPSEventGenerator::setReaction(ReactionInfo *reaction) {
 			m_pid.push_back(particle->PdgCode());
 			m_Wmin += particle->Mass();
 			Qtot += particle->Charge() / 3; //return in units |e| / 3
+			cout << " Particle: " << particle->GetName() << " found in pdg DB " << endl;
+			cout << " Mass: " << particle->Mass() << " Charge: " << particle->Charge() / 3 << endl;
 		}
 	}
 
@@ -165,13 +167,13 @@ void Clas12PhotonsPSEventGenerator::Generate() {
 	phi = gRandom->Uniform(0, TMath::TwoPi());
 	Peprime.SetXYZT(Eprime * sqrt(1 - ctheta * ctheta) * sin(phi), Eprime * sqrt(1 - ctheta * ctheta) * cos(phi), Eprime * ctheta, Eprime);
 	m_vP.push_back(Peprime);
-	//1-D: fix the kinematics of the pseudo-particle "W" in the LAB frame
-	Pw.SetXYZT(0, 0, 0, Wval);
-	Pw.Boost(m_P0.BoostVector());
+	//1-D: fix the kinematics of the pseudo-particle "W" in the LAB frame: this is simply P0-Peprime
+	Pw=m_P0-Peprime;
+
 
 	//2: now handle the "decay" process W->other final state particles
 	m_generator.SetDecay(Pw, m_Np - 1, &(m_pmass[1]));
-	m_generatorMaxWt = m_generator.GetWtMax();
+	m_generatorMaxWt = m_generator.GetWtMax()*2; //*2 is temporary
 
 	while (1) {
 		Wt = m_generator.Generate();

@@ -1,7 +1,7 @@
 
 INC_DIR :=  -I. -I$(AMPTOOLS) -I../include
 
-CXX := gcc
+CXX := g++
 CXX_FLAGS := $(shell root-config --cflags)
 
 SRCDIRS := src 
