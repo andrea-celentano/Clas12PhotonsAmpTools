@@ -35,7 +35,7 @@ Clas12PhotonsAmplitudeEventGenerator::Clas12PhotonsAmplitudeEventGenerator(const
 	m_ATI = new AmpToolsInterface(cfgInfo);
 
 	m_doTweight = false;
-	m_Nt = 100E3;
+	m_Nt = 1E6;
 
 	m_EfficiencyDone = false;
 	m_efficiency = 0;
