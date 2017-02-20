@@ -17,6 +17,10 @@ public:
 
 	Clas12PhotonsPSEventGenerator();
 
+	int getNp() const{
+		return m_Np;
+	}
+
 	double getThetaMax() const {
 		return m_thetaMax;
 	}
@@ -81,6 +85,21 @@ public:
 	TLorentzVector GetDecay(int ip) {
 		return m_vP[ip];
 	}
+	vector<TLorentzVector> GetFinalStateParticles(){
+		return m_vP;
+	}
+
+	 /*Returns in the order required by AmpTools: beam,e',target,other particles*/
+	vector<TLorentzVector> GetAllParticlesAmpToolsOrder(){
+		vector<TLorentzVector> v;
+		v.push_back(m_beam);
+		v.push_back(m_vP[0]);
+		v.push_back(m_target);
+		for (int ip=1;ip<m_Np;ip++) v.push_back(m_vP[ip]);
+		return v;
+	}
+
+
 
 private:
 

@@ -34,6 +34,7 @@ Clas12PhotonsPSEventGenerator::Clas12PhotonsPSEventGenerator() :
 	m_EprimeMin = 0.5;
 	m_EprimeMax = 4.5;
 
+	gRandom->SetSeed(m_seed);
 }
 
 void Clas12PhotonsPSEventGenerator::setReaction(ReactionInfo *reaction) {
@@ -117,6 +118,11 @@ void Clas12PhotonsPSEventGenerator::Generate() {
 	double Wval, WminGen, WmaxGen;
 	double Eprime;
 	double Wt;
+	if (m_reaction == 0){
+		Error("Generate","Reaction not set yet!");
+		return;
+	}
+
 	if (m_Wdistr == 0) {
 		Info("Generate", "W distribution not yet sampled. Doing so now");
 		this->computeWdistr();

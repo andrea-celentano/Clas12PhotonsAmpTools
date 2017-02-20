@@ -20,8 +20,7 @@ template<class T> Clas12PhotonsAmplitude<T>::Clas12PhotonsAmplitude(const vector
 
 //This ordering is convenient for the helicity!!
 
-/*This calculates the electron-scattering in the GJ framework!
- */
+/*This calculates the electron-scattering in the GJ framework!*/
 
 template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble** pKin, ElectronScatteringTerm &ElectronScattering) const {
 
