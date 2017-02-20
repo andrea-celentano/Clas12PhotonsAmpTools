@@ -97,7 +97,7 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 	int it_generation;
 	int saved;
 
-	double t, wt, wtMax;
+	double t, wt;
 	double intensity, maxIntensity;
 
 	if (!m_EfficiencyDone) this->computeEfficiency();
@@ -125,7 +125,7 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 			if (m_doTweight) {
 				t = -(m_PSgenerator->GetAllParticlesAmpToolsOrder()[2] - m_PSgenerator->GetAllParticlesAmpToolsOrder()[3]).M2();
 				wt = m_hTweight->GetBinContent(m_hTweight->FindBin(t));
-				if (wt < gRandom->Uniform(0, wtMax)) {
+				if (wt < gRandom->Uniform(0, m_wtMax)) {
 					i--;
 					continue;
 				}
