@@ -105,8 +105,8 @@ void Clas12PhotonsDataWriterLUND::particle_line(int np){
  
   m_PDGparticle=m_PDGdb->GetParticle(m_pid[np]);
 
-  //index
-  stream<<np<<" "; 
+  //index (COUNTING FROM 1, otherwise GEMC doesn't work)
+  stream<<np+1<<" ";
   //charge
   stream<<m_PDGparticle->Charge()/3<<" "; //Charge() returns in units of |e|/3
   //status
