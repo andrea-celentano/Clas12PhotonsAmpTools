@@ -29,17 +29,39 @@ template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble*
 
 	TLorentzVector beam;
 	TLorentzVector electron;
+	TLorentzVector gamma;
 	double E1, E2, Eg;
 	double theta1, theta2, phi1, phi2;
 	double Pzg;
 	double Mg;
 	double Q2;
 
+	double thetaRot1,thetaRot2;
+
 	//define here all the relevant variables
 	beam.SetPxPyPzE(pKin[Ibeam][1], pKin[Ibeam][2], pKin[Ibeam][3], pKin[Ibeam][0]);
 	electron.SetPxPyPzE(pKin[Iscattered][1], pKin[Iscattered][2], pKin[Iscattered][3], pKin[Iscattered][0]);
-	E1 = pKin[Ibeam][0];
-	E2 = pKin[Iscattered][0];
+	
+	gamma = beam - electron;
+	
+	//following formulas are given for quasi-real photon moving along +z. So rotate.
+	
+	//First, rotate along z to have Pgamma in the xy plane
+	thetaRot1=atan2(-Pgamma.Y(),Pgamma.X());
+	beam.RotateZ(thetaRot1);
+	electron.RotateZ(thetaRot1);
+	gamma = beam - electron;
+	
+	//then, rotate along y to have Pgamma along z
+	thetaRot2=atan2(-Pgamma.X(),Pgamma.Z());
+	beam.RotateY(thetaRot2);
+	electron.RotateY(thetaRot2);
+	gamma = beam - electron;
+	
+	//now I can use Vincent's formulas
+	
+	E1 = beam.E();
+	E2 = electron.E();
 	Eg = E1 - E2;
 	Q2 = -(beam - electron).M2();
 
@@ -48,7 +70,7 @@ template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble*
 	phi1 = beam.Phi();
 	phi2 = electron.Phi();
 
-	Pzg = pKin[Ibeam][3] - pKin[Iscattered][3]; //quasi real photon momentum (GJ:Purely along z)
+	Pzg = pKin[Ibeam][3] - pKin[Iscattered][3]; //quasi real photon momentum (Purely along z)
 	Mg = sqrt(Pzg * Pzg - Eg * Eg);
 
 	if ((m_helicity_beam == 1) && (m_helicity_electron == 1)) {		
