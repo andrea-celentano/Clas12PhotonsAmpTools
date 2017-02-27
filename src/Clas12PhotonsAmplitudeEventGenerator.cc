@@ -133,7 +133,7 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 			if (i % (N_PS / 10) == 0) cout << " PS event: " << i << endl;
 			Kinematics m_kin(m_PSgenerator->GetAllParticlesAmpToolsOrder());
 			m_kinVPS.push_back(m_kin); //save the event also in this vector, for later use if this loop is entered again
-			m_ATI->loadEvent(&m_kin, i, N_PS * it_generation);
+			m_ATI->loadEvent(&m_kin, (it_generation - 1) * N_PS+i, N_PS * it_generation);
 		}
 		Info("GenerateEvents", "Generation iteration %i : computing intensity ", it_generation);
 		maxIntensity = m_ATI->processEvents(m_reaction->reactionName());
@@ -143,7 +143,7 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 		saved = 0;
 		m_kinVGenerated.clear();
 
-		for (int i = 0; i < N_PS; i++) {
+		for (int i = 0; i < N_PS*it_generation; i++) {
 			if ((i % 10000) == 0) cout << "Event " << i << " intensity: " << m_ATI->intensity(i) << endl;
 			intensity = m_ATI->intensity(i);
 			if (intensity > gRandom->Uniform(0, maxIntensity)) {  //if intensity is bigger than random number between 0 and max, keep it.
