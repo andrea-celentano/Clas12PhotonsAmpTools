@@ -47,13 +47,13 @@ template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble*
 	//following formulas are given for quasi-real photon moving along +z. So rotate.
 	
 	//First, rotate along z to have Pgamma in the xy plane
-	thetaRot1=atan2(-Pgamma.Y(),Pgamma.X());
+	thetaRot1=atan2(-gamma.Y(),gamma.X());
 	beam.RotateZ(thetaRot1);
 	electron.RotateZ(thetaRot1);
 	gamma = beam - electron;
 	
 	//then, rotate along y to have Pgamma along z
-	thetaRot2=atan2(-Pgamma.X(),Pgamma.Z());
+	thetaRot2=atan2(-gamma.X(),gamma.Z());
 	beam.RotateY(thetaRot2);
 	electron.RotateY(thetaRot2);
 	gamma = beam - electron;
