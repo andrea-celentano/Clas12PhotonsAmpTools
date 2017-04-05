@@ -41,9 +41,8 @@ template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble*
 	double Mg;
 	double Q2;
 
-	double thetaRot1, thetaRot2, thetaRot3;
 
-	complex<GDouble> c1, c2, c3, c4;
+	double thetaRot1,thetaRot2;
 
 	//define here all the relevant variables
 	beam.SetPxPyPzE(pKin[Ibeam][1], pKin[Ibeam][2], pKin[Ibeam][3], pKin[Ibeam][0]);
@@ -51,49 +50,9 @@ template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble*
 
 	gamma = beam - electron;
 
-	//following formulas are given for quasi-real photon moving along +z. So rotate.
-
-	 TLorentzVector target(pKin[2][1], pKin[2][2], pKin[2][3], pKin[2][0]);
-	 TLorentzVector proton(pKin[3][1], pKin[3][2], pKin[3][3], pKin[3][0]);
-	 TLorentzVector pi0(pKin[4][1], pKin[4][2], pKin[4][3], pKin[4][0]);
-
-	 //	beam.Boost(-pi0.BoostVector());
-	 //	target.Boost(-pi0.BoostVector());
-	 //	electron.Boost(-pi0.BoostVector());
-	 //	proton.Boost(-pi0.BoostVector());
-	 //	pi0.Boost(-pi0.BoostVector());
-
-	 //First, rotate along z to have Pgamma in the xy plane
-	 thetaRot1 = atan2(-gamma.Y(), gamma.X());
-	 target.RotateZ(thetaRot1);
-	 beam.RotateZ(thetaRot1);
-	 electron.RotateZ(thetaRot1);
-	 proton.RotateZ(thetaRot1);
-	 pi0.RotateZ(thetaRot1);
-	 gamma = beam - electron;
-
-	 //then, rotate along y to have Pgamma along z
-	 thetaRot2 = atan2(-gamma.X(), gamma.Z());
-	 target.RotateY(thetaRot2);
-	 beam.RotateY(thetaRot2);
-	 electron.RotateY(thetaRot2);
-	 proton.RotateY(thetaRot2);
-	 pi0.RotateY(thetaRot2);
-	 gamma = beam - electron;
-
-
-	//Finally, rotate again along z to have hadronic plane in xz
-	 thetaRot3 = atan2(-proton.Y(), proton.X());
-	 target.RotateZ(thetaRot3);
-	 beam.RotateZ(thetaRot3);
-	 electron.RotateZ(thetaRot3);
-	 proton.RotateZ(thetaRot3);
-	 pi0.RotateZ(thetaRot3);
-	 gamma = beam - electron;
-
 
 	//First, rotate along z to have Pgamma in the xy plane
-	/* 	 thetaRot1=atan2(-gamma.Y(),gamma.X());
+	 thetaRot1=atan2(-gamma.Y(),gamma.X());
 	 beam.RotateZ(thetaRot1);
 	 electron.RotateZ(thetaRot1);
 	 gamma = beam - electron;
@@ -103,7 +62,7 @@ template<class T> int Clas12PhotonsAmplitude<T>::calcElectronScattering(GDouble*
 	 beam.RotateY(thetaRot2);
 	 electron.RotateY(thetaRot2);
 	 gamma = beam - electron;
-	 */
+	 
 
 	//now I can use Vincent's formulas
 	E1 = beam.E();
