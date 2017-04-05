@@ -40,6 +40,12 @@ public:
 
 	Clas12PhotonsAmplitude<T>() :
 			UserAmplitude<T>() {
+
+		One.real(1.);
+		One.imag(0.);
+		I.real(0.);
+		I.imag(1.);
+
 	}
 	Clas12PhotonsAmplitude<T>(const vector<string>& args);
 
@@ -54,6 +60,10 @@ public:
 
 	int calcElectronScattering(GDouble** pKin, ElectronScatteringTerm &ElectronScattering) const;
 	virtual complex<GDouble> calcHelicityAmplitude(int helicity, GDouble** pKin) const = 0; //this will be derived by the user in his amplitude!!!
+
+private:
+	complex<GDouble> One;
+	complex<GDouble> I;
 
 #ifdef GPU_ACCELERATION
 
@@ -72,9 +82,7 @@ protected:
 
 };
 
-
 #include "Clas12PhotonsAmplitude.tpp"
-
 
 #endif
 
