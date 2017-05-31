@@ -98,7 +98,7 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 	int saved;
 
 	double t, wt;
-	double intensity, maxIntensity;
+	double intensity, maxIntensity,maxIntensityThis;
 
 	if (!m_EfficiencyDone) this->computeEfficiency();
 
@@ -110,16 +110,11 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 
 
 
-
+	maxIntensity=0;
+	m_intensities.clear();
 	while (1) {
 		Info("GenerateEvents", "Generation iteration %i : generate PS events", it_generation);
 		m_ATI->clearEvents();
-		//Load previous events - if any
-		for (int it = 1; it < it_generation; it++) {
-			for (int i = 0; i < N_PS; i++) {
-				m_ATI->loadEvent(&m_kinVPS[(it - 1) * N_PS + i], (it - 1) * N_PS + i, N_PS * it_generation);
-			}
-		}
 		for (int i = 0; i < N_PS; i++) {
 			m_PSgenerator->Generate();
 			if (m_doTweight) {
@@ -136,7 +131,12 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 			m_ATI->loadEvent(&m_kin, (it_generation - 1) * N_PS+i, N_PS * it_generation);
 		}
 		Info("GenerateEvents", "Generation iteration %i : computing intensity ", it_generation);
-		maxIntensity = m_ATI->processEvents(m_reaction->reactionName());
+		maxIntensityThis = m_ATI->processEvents(m_reaction->reactionName());
+		for (int i=0 ; i < N_PS ; i++){
+			m_intensities.push_back(m_ATI->intensity(i));
+		}
+
+		if (maxIntensityThis>maxIntensity) maxIntensity=maxIntensityThis;
 		Info("GenerateEvents", "Done. Max Intensity is: %f", maxIntensity);
 		Info("GenerateEvents", "Doing hit-or-miss");
 
@@ -144,8 +144,8 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 		m_kinVGenerated.clear();
 
 		for (int i = 0; i < N_PS*it_generation; i++) {
-			if ((i % 10000) == 0) cout << "Event " << i << " intensity: " << m_ATI->intensity(i) << endl;
-			intensity = m_ATI->intensity(i);
+			if ((i % 10000) == 0) cout << "Event " << i << " intensity: " <<m_intensities[i]<< endl;
+			intensity = m_intensities[i];
 			if (intensity > gRandom->Uniform(0, maxIntensity)) {  //if intensity is bigger than random number between 0 and max, keep it.
 				saved++;
 				if (m_doTweight) {
@@ -155,9 +155,11 @@ void Clas12PhotonsAmplitudeEventGenerator::GenerateEvents() {
 				else{
 					wt=1;
 				}
-				Kinematics *m_kin = m_ATI->kinematics(i);
-				m_kin->setWeight(wt);
-				m_kinVGenerated.push_back(*m_kin);
+				m_kinVPS[i].setWeight(wt);
+				m_kinVGenerated.push_back(m_kinVPS[i]);
+			}
+			else{
+				m_kinVPS[i].setWeight(1.); //for later safety
 			}
 		}
 		if (saved >= m_Nevents) {

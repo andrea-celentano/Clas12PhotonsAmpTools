@@ -94,6 +94,7 @@ private:
 	vector<TLorentzVector> m_vP;
 	vector<Kinematics> m_kinVPS;
 	vector<Kinematics> m_kinVGenerated;
+	vector<double> m_intensities;
 
 };
 
