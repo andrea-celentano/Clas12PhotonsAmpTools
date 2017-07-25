@@ -200,7 +200,7 @@ void Clas12PhotonsAmplitudeEventGenerator::computeEfficiency() {
 		}
 		maxIntensity = m_ATI->processEvents(m_reaction->reactionName());
 		for (int i = 0; i < m_Nt; i++) {
-			t = -(m_ATI->kinematics(i)->particleList()[2] - m_ATI->kinematics(i)->particleList()[3]).M2(); //A.C. definitively need to do this better
+			t = -(m_ATI->kinematics(i)->particleList()[2] - m_ATI->kinematics(i)->particleList()[3]).M2(); //A.C. definitively need to do this better, but the order should be BEAM 'TARGET RECOIL
 			intensity = m_ATI->intensity(i);
 			m_hTweight->Fill(t, intensity);
 		}
